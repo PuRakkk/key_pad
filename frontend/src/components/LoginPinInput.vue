@@ -2,9 +2,13 @@
 import { ref } from "vue"
 import Buttons from "@/components/Buttons.vue";
 import router from "@/router";
+import axios from "axios";
+import { useTelegramUser } from "@/composables/useTelegramUser";
 
 const pin = ref("");
 const error_message = ref<string>("")
+const { telegram_username } = useTelegramUser()
+const { telegram_id } = useTelegramUser()
 
 const handleInput = (value: string) => {
     if (pin.value.length < 10) {
@@ -23,21 +27,36 @@ const handleDelete = () => {
 };
 
 
-const handleNext = () => {
+const handleNext = async () => {
+    console.log(telegram_id.value);
     if(pin.value === ""){
-        error_message.value = "Please input PIN"
+        error_message.value = "Please input PIN";
     }
     else if(pin.value.length < 4){
         error_message.value = "PIN must be at least 4 degits"
     }
-    else if(pin.value === "12345"){
-        router.push("/home")
+    else if(telegram_id.value === undefined){
+        error_message.value = "Please use in Telegram Bot";
     }
     else{
-        error_message.value = "Inncorrect PIN";
-        pin.value = pin.value.slice(0, -10);
-    }
+        try {
+            const response = await axios.post("http://127.0.0.1:8000/api/v1/check_login/", {
+                telegram_username: telegram_username.value,
+                telegram_id: telegram_id.value,
+                pin: pin.value,
+            });
+
+            if (response.data.success) {
+            router.push(response.data.redirect_url);
+            } else {
+            error_message.value = response.data.message;
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            error_message.value = "An error occurred. Please try again.";
+        }
 };
+    }
 
 </script>
 
