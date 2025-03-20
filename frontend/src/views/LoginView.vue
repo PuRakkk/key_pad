@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import LoginPinInput from "@/components/LoginPinInput.vue";
+import TelegramUser from "@/components/telegramUser.vue";
+import timeStamp from "@/components/timeStamp.vue";
 
 const router = useRouter();
 const pin = ref("");
@@ -10,16 +13,13 @@ const pin = ref("");
 <template>
   <div class="h-screen flex items-center justify-center bg-slate-50">
     <div class="w-[768px] flex flex-col items-center">
-      <input
-        class="w-10/12 p-2 text-center text-lg border-transparent rounded-md mb-3 bg-gray-200"
-        v-model="pin"
-        placeholder="Enter Admin Pin"
-        maxlength="10"
-        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-        inputmode="none"
-        autofocus
-        type="password"
-      />
+      <div class="absolute top-0 left-0 p-4">
+        <TelegramUser/>
+      </div>
+      <div class="absolute top-0 right-0 p-4">
+        <timeStamp/>
+      </div>
+      <LoginPinInput/>
     </div>
   </div>
 </template>

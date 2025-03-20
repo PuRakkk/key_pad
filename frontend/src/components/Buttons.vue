@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { defineEmits } from "vue";
 
 const emit = defineEmits(["input", "delete", "next"]);
 </script>
@@ -64,7 +63,7 @@ const emit = defineEmits(["input", "delete", "next"]);
         <button
             class="text-xl font-bold border-gray-300 border bg-gray-100 w-18 h-16 rounded-lg shadow-xl flex items-center justify-center active:bg-white active:scale-10"
             @click="emit('next')">
-            <i class="fas fa-angle-double-right"></i>
+            <i class="fas fa-arrow-alt-circle-right"></i>
         </button>
     </div>
 </template>
