@@ -9,16 +9,14 @@ class Company(models.Model):
     com_email = models.EmailField(unique=True, blank=True, null=True)
     com_contact = models.CharField(max_length=15, blank=True, null=True)
     com_status = models.BooleanField(default=True)  
+    com_password = models.CharField(max_length=50)
     com_created_at = models.DateTimeField(auto_now_add=True)
-    telegram_id = models.BigIntegerField(unique=True)
-    telegram_username = models.CharField(max_length=150)
-    com_password = models.CharField(max_length=150, null=False, default='defaultpassword123')
 
     class Meta:
         db_table = 'qrjump_companies_storage'
 
     def __str__(self):
-        return f"{self.com_name} - {self.com_email} - {self.com_contact} - {self.com_status} - {self.com_created_at} - {self.telegram_id} - {self.telegram_username}"
+        return f"{self.com_name} - {self.com_email} - {self.com_contact} - {self.com_status} - {self.com_created_at}"
 
 
 class Branch(models.Model):
@@ -26,7 +24,6 @@ class Branch(models.Model):
     br_kh_name = models.CharField(max_length=150)
     br_en_name = models.CharField(max_length=150)
     br_email = models.EmailField(unique=True,blank=True, null=True)
-    br_password = models.CharField(max_length=150, blank=True, null=True)
     br_contact = models.CharField(max_length=15, blank=True, null=True)
     br_status = models.BooleanField(default=True)
     br_created_at = models.DateTimeField(auto_now_add=True)
@@ -47,14 +44,14 @@ class Staff(models.Model):
     staff_status = models.BooleanField(default=True)
     staff_created_at = models.DateTimeField(auto_now_add=True)
     staff_telegram_id = models.BigIntegerField(blank=True, null=True, unique=True)
-    staff_telegram_username = models.CharField(max_length=150,unique=True)
+    staff_telegram_username = models.CharField(max_length=150,unique=True, null=True,)
     staff_user_pin = models.CharField(max_length=8, blank=True, null=True)
 
     class Meta:
         db_table = 'qrjump_staff_users_storage'
 
     def __str__(self):
-        return f"{self.com_id} - {self.staff_name} - {self.staff_email} - {self.staff_contact} - {self.staff_position} - {self.staff_status} - {localtime(self.staff_created_at).strftime('%Y-%m-%d %H:%M:%S')} - {self.staff_telegram_id} - {self.staff_telegram_username} - {self.staff_user_pin}"
+        return f"{self.com_id} - {self.staff_name} - {self.staff_email} - {self.staff_contact} - {self.staff_position} - {self.staff_status} - {localtime(self.staff_created_at).strftime('%Y-%m-%d %H:%M:%S')} - {self.staff_telegram_username} - {self.staff_user_pin}"
     
     
 class TransactionHistory(models.Model):

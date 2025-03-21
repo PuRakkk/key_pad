@@ -70,76 +70,19 @@ def check_token_status(request):
 
 @api_view(['POST'])
 def check_login(request):
-    error_message = None
     telegram_username = request.data.get('telegram_username')
-    telegram_id = request.data.get('telegram_id')
     pin = request.data.get('pin')
 
-    if not telegram_username or not telegram_id:
-            return JsonResponse({
-            'success': False,
-        })
-    else:
-        try:
-            user_pin = pin
+    staff = Staff.objects.filter(staff_telegram_username=telegram_username).first()
 
-            hashed_pass = hashlib.sha256(user_pin.encode('utf-8')).hexdigest()
-            password = base64.b64encode(hashed_pass.encode('utf-8')).decode('utf-8')
-
-            api = "https://ezzecore1.mobi:8446/api/v1/token/"
-
-            data = {
-                'username': telegram_username,
-                'password': password
-            }
-
-            response = requests.post(api, data=data)
-
-            if response.status_code == 200:
-                access_token = response.json().get('access')
-                refresh_token = response.json().get('refresh')
-
-                request.session['access_token'] = access_token
-                request.session['refresh_token'] = refresh_token
-
-                staff_api = f"https://ezzecore1.mobi:8446/api/v1/staff/?staff_telegram_username={telegram_username}"
-                headers = {
-                    'Authorization': f'Bearer {access_token}',
-                    'Content-Type': 'application/json'
-                }
-
-                staff_response = requests.get(staff_api, headers=headers)
-
-                if staff_response.status_code == 200:
-                    staff_data = staff_response.json()
-                    if 'data' in staff_data and staff_data['data']:
-                        staff_user_pin = staff_data['data'][0]['staff_user_pin']
-                        staff_status = staff_data['data'][0]['staff_status']
-                        if staff_user_pin == user_pin and staff_status is True:
-                            user, created = User.objects.get_or_create(username=telegram_username)
-                            login(request, user)
-
-                            return JsonResponse({
-                                'success': True,
-                            })
-                        elif not staff_user_pin and staff_status is True:
-                            return JsonResponse({
-                                'success': False,
-                                'message': 'Please set up your PIN'
-                            })
-                    else:
-                        error_message = "Your account is inactive. Please contact admin"
-                else:
-                    error_message = "Error fetching staff information"
-            else:
-                error_message = "Invalid PIN or not yet registered"
-        except Exception as e:
-            error_message = f"Error: {str(e)}"
-
-    return JsonResponse({
-        'success': False,
-        'message': error_message
-    })
+    if not staff:
+        return JsonResponse({'success': False, 'message': 'User not found'}, status=404)
+    
+    if staff:
+        if staff.staff_user_pin == pin:
+            return JsonResponse({'success': True, 'message':'Login successfull'})
+        else:
+            return JsonResponse({'success': False, 'message':'Incorrect PIN'})
    
 
 @api_view(['GET'])
@@ -159,8 +102,6 @@ def fetch_all_users(request):
         return Response({
             'users': list(users),
         }, status=status.HTTP_200_OK)
-    
-
 
 class CompanyFilter(filters.FilterSet):
     com_id = filters.NumberFilter(field_name='com_id', lookup_expr='exact')
@@ -673,7 +614,7 @@ class StaffViewSet(viewsets.ModelViewSet):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
             try:
-                bot_user = BotUsersStorage.objects.get(username=staff_telegram_username)
+                bot_user = BotUsersStorage.objects.get(telegram_username=staff_telegram_username)
                 if bot_user.message_id:
                     bot_user.user_status = "Active"
                     bot_user.save()

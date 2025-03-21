@@ -26,8 +26,7 @@ class BranchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Branch
         fields = [
-            'id', 'com_id', 'br_kh_name', 'br_en_name', 'br_email', 
-            'br_password', 'br_contact', 'br_status', 'br_created_at',
+            'id', 'com_id', 'br_kh_name', 'br_en_name', 'br_email', 'br_contact', 'br_status', 'br_created_at',
             'bank_credentials','payment_types'
         ]
     def get_payment_types(self, obj):

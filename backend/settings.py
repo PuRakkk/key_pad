@@ -37,13 +37,9 @@ SECRET_KEY = 'django-insecure-2fi$a0@yqm(5wkmu7mvm#s3w5!$&r=w$6^l#yuf4u9m*$ve=jz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "92f3-118-67-205-137.ngrok-free.app"]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Allow Vue frontend to communicate
-    "http://127.0.0.1:8000",
-    "https://2c26-118-67-205-137.ngrok-free.app",
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import SuperAdmin
-from .models import Company, Branch, Staff, TransactionHistory, BankCredentials, StaticPayment
+from .models import Company, Branch, Staff, TransactionHistory, BankCredentials, StaticPayment, BotUsersStorage
 from django import forms
 
 class BankCredentialsForm(forms.ModelForm):
@@ -37,6 +37,7 @@ admin.site.register(Branch)
 admin.site.register(Staff)
 admin.site.register(TransactionHistory)
 admin.site.register(StaticPayment)
+admin.site.register(BotUsersStorage)
 
 class SuperAdminAdmin(admin.ModelAdmin):
     fieldsets = (

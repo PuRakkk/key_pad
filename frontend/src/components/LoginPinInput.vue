@@ -28,7 +28,6 @@ const handleDelete = () => {
 
 
 const handleNext = async () => {
-    console.log(telegram_id.value);
     if(pin.value === ""){
         error_message.value = "Please input PIN";
     }
@@ -40,20 +39,28 @@ const handleNext = async () => {
     }
     else{
         try {
-            const response = await axios.post("http://127.0.0.1:8000/api/v1/check_login/", {
+            const response = await axios.post("https://92f3-118-67-205-137.ngrok-free.app/api/v1/check_login/", {
                 telegram_username: telegram_username.value,
                 telegram_id: telegram_id.value,
                 pin: pin.value,
             });
 
             if (response.data.success) {
-            router.push(response.data.redirect_url);
+                pin.value = pin.value.slice(0, -10);
+                router.push("/home");
             } else {
-            error_message.value = response.data.message;
+                pin.value = pin.value.slice(0, -10);
+                error_message.value = response.data.message;
             }
-        } catch (error) {
-            console.error("Login error:", error);
-            error_message.value = "An error occurred. Please try again.";
+        } catch (error: any) {
+            alert("Login error: " + error.message || "An error occurred. Please try again.");
+            if (error.response && error.response.status === 404) {
+                error_message.value = "User not found";
+                pin.value = pin.value.slice(0, -10);
+            } else {
+                pin.value = pin.value.slice(0, -10);
+                error_message.value = "An error occurred. Please try again.";
+            }
         }
 };
     }
