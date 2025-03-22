@@ -9,9 +9,11 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 // Import specific icons
 import { faAnglesRight } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 // Add icons to the library
 library.add(faAnglesRight);
+library.add(faUser);
 
 const app = createApp(App);
 

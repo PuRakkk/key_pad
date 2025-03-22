@@ -31,7 +31,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="p-4 justify-center">
-        <p class="text-sm font-bold">{{ timestamp }}</p>
+    <div class="p-4 top-0">
+        <p class="text-[12px] font-bold">{{ timestamp }}</p>
   </div>
 </template>

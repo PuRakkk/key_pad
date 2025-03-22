@@ -74,6 +74,7 @@ def check_login(request):
     pin = request.data.get('pin')
 
     staff = Staff.objects.filter(staff_telegram_username=telegram_username).first()
+    print(telegram_username)
 
     if not staff:
         return JsonResponse({'success': False, 'message': 'User not found'}, status=404)

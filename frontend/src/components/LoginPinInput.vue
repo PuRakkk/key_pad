@@ -39,7 +39,7 @@ const handleNext = async () => {
     }
     else{
         try {
-            const response = await axios.post("https://92f3-118-67-205-137.ngrok-free.app/api/v1/check_login/", {
+            const response = await axios.post("https://cfb5-118-67-205-137.ngrok-free.app/api/v1/check_login/", {
                 telegram_username: telegram_username.value,
                 telegram_id: telegram_id.value,
                 pin: pin.value,
@@ -53,7 +53,6 @@ const handleNext = async () => {
                 error_message.value = response.data.message;
             }
         } catch (error: any) {
-            alert("Login error: " + error.message || "An error occurred. Please try again.");
             if (error.response && error.response.status === 404) {
                 error_message.value = "User not found";
                 pin.value = pin.value.slice(0, -10);

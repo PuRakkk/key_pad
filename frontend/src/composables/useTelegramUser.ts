@@ -1,5 +1,5 @@
 import { useRoute } from "vue-router";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 
 export function useTelegramUser() {
     const route = useRoute();
@@ -9,35 +9,39 @@ export function useTelegramUser() {
     const fullName = ref<string | null>(null);
     const photoUrl = ref<string | null>(null);
 
-    onMounted(() => {
+    const updateUserInfo = () => {
+
         const storedUsername = localStorage.getItem("telegram_username");
         const storedTelegramId = localStorage.getItem("telegram_id");
         const storedFullName = localStorage.getItem("full_name");
-        const storePhotoUrl = localStorage.getItem("photo_url")
+        const storedPhotoUrl = localStorage.getItem("photo_url");
 
-
-        if (storedUsername && storedTelegramId && storedFullName && storePhotoUrl) {
+        if (storedUsername && storedTelegramId && storedFullName) {
+            console.log("Using stored data");
             telegram_username.value = storedUsername;
             telegram_id.value = storedTelegramId;
             fullName.value = storedFullName;
-            photoUrl.value = storePhotoUrl;
+            photoUrl.value = storedPhotoUrl;
         } else {
-            telegram_username.value = route.query.telegram_username as string || "Guest";
-            telegram_id.value = route.query.telegram_id as string || "";
-            fullName.value = route.query.full_name as string || "Guest";
-            photoUrl.value = route.query.photo_url as string || "No Profile";
+            console.log("Using route data");
+            telegram_username.value = (route.query.telegram_username as string) || "Guest";
+            telegram_id.value = (route.query.telegram_id as string) || "";
+            fullName.value = (route.query.full_name as string) || "Guest";
+            photoUrl.value = (route.query.photo_url as string) || "@/assets/icon/user.png";
 
-            localStorage.setItem("telegram_username", telegram_username.value);
-            localStorage.setItem("telegram_id", telegram_id.value);
-            localStorage.setItem("full_name", fullName.value);
-            localStorage.setItem("photo_url", photoUrl.value);
+            if (telegram_username.value !== "Guest") {
+                localStorage.setItem("telegram_username", telegram_username.value);
+                localStorage.setItem("telegram_id", telegram_id.value);
+                localStorage.setItem("full_name", fullName.value);
+                localStorage.setItem("photo_url", photoUrl.value);
+            }
         }
-    });
+    };
 
-    const computedTelegramUsername = computed(() => telegram_username.value);
-    const computedTelegramId = computed(() => telegram_id.value);
-    const computedFullName = computed(() => fullName.value);
-    const computedPhotoUrl = computed(() => photoUrl.value)
+    onMounted(updateUserInfo);
 
-    return { telegram_username: computedTelegramUsername, telegram_id: computedTelegramId, fullName: computedFullName, photo_url: computedPhotoUrl };
+    // 🔥 Watch for route query changes (for reactivity)
+    watch(() => route.query, updateUserInfo, { deep: true });
+
+    return { telegram_username, telegram_id, fullName, photoUrl };
 }
