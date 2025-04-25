@@ -39,7 +39,7 @@ const handleNext = async () => {
     }
     else{
         try {
-            const response = await axios.post("https://cfb5-118-67-205-137.ngrok-free.app/api/v1/check_login/", {
+            const response = await axios.post("https://66d7-118-67-205-137.ngrok-free.app/api/v1/check_login/", {
                 telegram_username: telegram_username.value,
                 telegram_id: telegram_id.value,
                 pin: pin.value,
